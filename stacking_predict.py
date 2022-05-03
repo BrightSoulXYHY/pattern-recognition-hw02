@@ -13,32 +13,23 @@ import pprint
 import numpy as np
 
 # 导入数据集
-from data.CIFAR10_BS import CIFAR10_BS
+from data.CIFAR10_Stacking import CIFAR10_Stacking
 # 导入网络
 from modules.NN_BS import *
 
-
-transform_test = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-])
 
 
 start_time = time.time()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 img_size = 32
 
-testset = CIFAR10_BS(root='./data', train=True, download=False, transform=transform_test,train_batchL=[4])
-test_loader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=2)
-# testset = CIFAR10_BS(root='./data', train=False, download=False, transform=transform_test)
-# test_loader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+
+testset = CIFAR10_Stacking(root='./data', train=False)
+test_loader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+
 
 NN_DICT = {
-    "FCx1":NN_FCx1,
-    "CNN":NN_CNN,
-    "CNN_AvgPool":NN_CNN_AvgPool,
-    "LeNet":LeNet,
-    "AlexNet":AlexNet,
+    "Stacking":NN_Stacking,
 }
 
 class NN_Config:
@@ -47,7 +38,7 @@ class NN_Config:
 
 
 def nn_builder(cfg):
-    model = NN_DICT[cfg.nn_type]()
+    model = NN_DICT[cfg.nn_type](input_size=len(CIFAR10_Stacking.txt_fileL)*10)
     # 断点训练
     if os.path.exists(cfg.pth_test):
         model.load_state_dict(torch.load(cfg.pth_test, map_location=device))
@@ -62,8 +53,6 @@ def predict(cfg):
     correct = 0
     total = 0
     for images, labels in test_loader:
-        if cfg.nn_type == "FCx1":
-            images,labels = images.reshape(-1, img_size*img_size*3),labels
         images,labels = images.to(device),labels.to(device)
         outputs = model(images)
         _, predicted = torch.max(outputs, 1)
@@ -74,8 +63,6 @@ def predict(cfg):
         accuracy = 100 * correct / total
         predicted_np = predicted.cpu().numpy()
         predicted_all = np.append(predicted_all,predicted_np)
-    # predicted_all = np.array(predicted_all,dtype=np.int64)
-    # predicted_all = predicted_all.reshape(-1,1)
     np.savetxt(f"log/{cfg.nn_type}_predict.txt",predicted_all,fmt="%d")
     print(f"[{time.time()-start_time:.2f}] All done,accuracy={accuracy:.4f}")
 
@@ -83,7 +70,7 @@ def predict(cfg):
 def main():
     args = sys.argv
     if len(args) == 1:
-        yaml_path = "config/FCx1.yaml"
+        yaml_path = "config/Stacking.yaml"
     elif len(args) == 2:
         yaml_path = args[1]
     else:
@@ -98,7 +85,6 @@ def main():
         nn_cfg = NN_Config(**data_dict)
 
     print(f"Start Predict: {nn_cfg.nn_type} pth_path: {nn_cfg.pth_test}")
-
 
     predict(nn_cfg)
 

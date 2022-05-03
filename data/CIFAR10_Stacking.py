@@ -12,6 +12,7 @@ class CIFAR10_Stacking(Dataset):
         "CNN_predict.txt",
         "FCx1_predict.txt",
         "LeNet_predict.txt",
+        "AlexNet_predict.txt",
     ]
     
     def __init__(self, root, train=True, transform=None, target_transform=None):
@@ -24,12 +25,16 @@ class CIFAR10_Stacking(Dataset):
             data_path = "batch-test"
         
         base_path = os.path.join(self.raw_folder,data_path)
-        self.data_np = np.vstack([
+        data_in = np.vstack([
             np.loadtxt(f"{base_path}/{txt_file}",dtype=np.int)
             for txt_file in  self.txt_fileL
         ]).T
-
-        self.label_np = np.loadtxt(f"{base_path}/data_gt.txt",dtype=np.int)
+        self.label_np = np.loadtxt(f"{base_path}/data_gt.txt",dtype=np.int).tolist()
+        
+        self.data = np.zeros((len(self.label_np),10*len(self.txt_fileL)))
+        for i,line in enumerate(data_in):
+            for j,num in enumerate(line):
+               self.data[i,10*j+num] = 1
 
         self.transform = transform
         self.target_transform = target_transform
@@ -38,8 +43,8 @@ class CIFAR10_Stacking(Dataset):
 
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
-        data = self.data_np[index]
-        label = self.label_np[index]
+        data = torch.from_numpy(self.data[index]).float()
+        label = int(self.label_np[index])
         if self.transform is not None:
             data = self.transform(data)
 

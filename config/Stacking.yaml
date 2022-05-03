@@ -1,0 +1,6 @@
+nn_type: Stacking
+num_epochs: 100
+learning_rate: 0.001
+continue_train: False
+pth_path: "weights_log/CNN_AvgPool_time=20220502-231618_device=cuda_epoch=50_acc=65.9300.pth"
+pth_test: "weights/Stacking_time=20220503-184446_device=cuda_epoch=10_acc=77.7400.pth"

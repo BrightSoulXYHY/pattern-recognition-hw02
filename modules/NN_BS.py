@@ -83,3 +83,61 @@ class LeNet(nn.Module):
         out = F.relu(self.fc2(out))
         out = self.fc3(out)
         return out
+
+class AlexNet(nn.Module):
+    def __init__(self):
+        super(AlexNet,self).__init__()
+        self.cnn=nn.Sequential(
+
+            #Conv1
+            nn.Conv2d(in_channels=3,out_channels=96,kernel_size=2,padding=1),
+            nn.BatchNorm2d(num_features=96),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2,stride=2),
+            #Conv2
+            nn.Conv2d(in_channels=96,out_channels=256,kernel_size=3,padding=1),
+            nn.BatchNorm2d(num_features=256),
+            nn.ReLU(inplace=True),
+            nn.AvgPool2d(kernel_size=2,stride=2),
+            #Conv3
+            nn.Conv2d(in_channels=256,out_channels=384,kernel_size=3,padding=1),
+            nn.BatchNorm2d(num_features=384),
+            nn.ReLU(inplace=True),
+            #Conv4
+            nn.Conv2d(in_channels=384,out_channels=384,kernel_size=3,padding=1),
+            nn.BatchNorm2d(num_features=384),
+            nn.ReLU(inplace=True),
+            #Conv5
+            nn.Conv2d(in_channels=384,out_channels=256,kernel_size=3,padding=1),
+            nn.BatchNorm2d(num_features=256),
+            nn.ReLU(inplace=True),
+            nn.AvgPool2d(kernel_size=2,stride=2)
+        )
+        self.lin=nn.Sequential(
+            nn.Flatten(),
+            nn.Dropout(p=0.5),
+            nn.Linear(4096,2048),
+            nn.ReLU(),
+            nn.Dropout(p=0.5),
+            nn.Linear(2048,1024),
+            nn.ReLU(),
+            nn.Linear(1024,10),
+            nn.LogSoftmax()
+        )
+    def forward(self,x):
+        x=self.cnn(x)
+        x=self.lin(x)
+        return x
+
+class NN_Stacking(nn.Module):
+    def __init__(self, input_size=40, hidden_size=120, num_classes=10):
+        super(NN_Stacking, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_size, num_classes)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        return x
