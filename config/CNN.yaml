@@ -1,0 +1,6 @@
+nn_type: CNN
+num_epochs: 100
+learning_rate: 0.001
+continue_train: True
+pth_path: "weights_log/CNN_time=20220502-230001_device=cuda_epoch=50_acc=52.8200.pth"
+pth_test: "weights/CNN_time=20220502-231128_device=cuda_epoch=20_acc=74.1500.pth"

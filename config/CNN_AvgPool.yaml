@@ -1,0 +1,6 @@
+nn_type: CNN_AvgPool
+num_epochs: 100
+learning_rate: 0.001
+continue_train: True
+pth_path: "weights_log/CNN_AvgPool_time=20220502-231618_device=cuda_epoch=50_acc=65.9300.pth"
+pth_test: "weights/CNN_AvgPool_time=20220503-101431_device=cuda_epoch=30_acc=67.1400.pth"

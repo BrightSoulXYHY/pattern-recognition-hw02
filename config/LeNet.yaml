@@ -1,0 +1,6 @@
+nn_type: LeNet
+num_epochs: 100
+learning_rate: 0.001
+continue_train: True
+pth_path: "weights_log/LeNet_time=20220502-231836_device=cuda_epoch=50_acc=68.5400.pth"
+pth_test: "weights/LeNet_time=20220503-101432_device=cuda_epoch=30_acc=70.0000.pth"
