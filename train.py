@@ -13,12 +13,9 @@ import yaml
 import sys
 import pprint
 
-# from utils.BS_Logger import BS_Logger
-
 
 # 导入数据集
 from data.CIFAR10_BS import CIFAR10_BS
-
 # 导入网络
 from modules.NN_BS import *
 
@@ -27,20 +24,11 @@ start_time = time.time()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 train_batchL = [0,1,2,3]
 
-# continue_train = False
-# pth_path = "weights_log/NN_FCx1_device=cuda-epoch=20-acc=48.9600.pth"
-
-
-
-# train_log = BS_Logger('log/all.log',level='debug',fmt='%(asctime)s - %(levelname)s: %(message)s',screen=False)
 # tb_writer = SummaryWriter("tb_log", flush_secs=10)
 
 
 img_size = 32
-# save_text = f'weights_log/NN_FCx1_time={time_str}'+'_device={}_epoch={:02d}_acc={:.4f}.pth'
-# 一些超参数
-# num_epochs = 50
-# learning_rate = 1e-4
+
 
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
@@ -191,7 +179,8 @@ def main():
     # pprint.pprint(nn_cfg.__dict__)
     print(f"Start Train: {nn_cfg.nn_type} with learning_rate={nn_cfg.learning_rate} num_epochs={nn_cfg.num_epochs}")
     print(f"continue_train is {nn_cfg.continue_train}")
-    print(f"pth_path: {nn_cfg.pth_path}")
+    if nn_cfg.continue_train:
+        print(f"pth_path: {nn_cfg.pth_path}")
 
 
 
