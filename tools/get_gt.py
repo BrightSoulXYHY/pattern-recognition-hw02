@@ -9,10 +9,10 @@ def unpickle(file):
     return data_dict
 
 def batch2png(file_name):
-    data_dict = unpickle(f"data/cifar-10-batches-py/{file_name}")
+    data_dict = unpickle(f"../data/cifar-10-batches-py/{file_name}")
     labelL = data_dict["labels"]
     labelL_np = np.array(labelL)
-    np.savetxt(f"log/{file_name}_gt.txt",labelL_np,fmt="%d")
+    np.savetxt(f"../log/{file_name}_gt.txt",labelL_np,fmt="%d")
 
 
-batch2png("data_batch_5")
+batch2png("test_batch")

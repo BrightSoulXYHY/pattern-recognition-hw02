@@ -1,13 +1,18 @@
 import numpy as np
 
-data_pathL = [
-    "CNN_AvgPool_predict.txt",
-    "CNN_predict.txt",
-    "FCx1_predict.txt",
-    "LeNet_predict.txt",
+txtfile_pathL = [
+    # "CNN_AvgPool_predict.txt",
+    # "CNN_predict.txt",
+    # "FCx1_predict.txt",
+    # "LeNet_predict.txt",
+    # "AlexNet_predict.txt",
+    "Stacking_predict.txt",
 ]
 
-gt_data = np.loadtxt("../log/data/data_batch_5_gt.txt",dtype=np.int)
+data_path = "../data/cifar-10-stacking/batch-test"
+
+gt_data = np.loadtxt(f"{data_path}/data_gt.txt",dtype=np.int)
+# gt_data = np.loadtxt("../log/data/data_batch_5_gt.txt",dtype=np.int)
 # fcx1_data = np.loadtxt("../log/data/FCx1_predict.txt",dtype=np.int)
 
 classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
@@ -25,7 +30,7 @@ def static_acc(pre_data,gt_data):
     
     print(f"toatal {100*np.sum(predict_trueL)/np.sum(class_totalL):.4f}")
     
-for i in data_pathL:
+for i in txtfile_pathL:
     print(i)
-    pre_data = np.loadtxt(f"../log/data/{i}",dtype=np.int)
+    pre_data = np.loadtxt(f"{data_path}/{i}",dtype=np.int)
     static_acc(pre_data,gt_data)

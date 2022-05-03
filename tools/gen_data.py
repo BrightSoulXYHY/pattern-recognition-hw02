@@ -5,14 +5,15 @@ accuracy_re = re.compile(r"accuracy=(\d+)\.(\d+)")
 
 
 log_fileL = [
-    "log/archive/NN_FCx1_20220502-172008.log"
+    "../log/archive/Stacking_20220503-184446.log"
+    # "log/archive/NN_FCx1_20220502-172008.log"
     # "log/archive/LeNet_20220502-231836.log"
     # "log/archive/CNN_20220502-230001.log",
     # "log/archive/CNN_20220502-231128.log",
     # "log/archive/CNN_AvgPool_20220502-231618.log",
     # "log/archive/CNN_AvgPool_20220503-101431.log",
 ]
-data_file = "log/plot/FCx1.txt"
+data_file = "../log/plot/Stacking.txt"
 
 textL = []
 for log_file in log_fileL:
