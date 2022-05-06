@@ -98,7 +98,7 @@ def train(cfg):
         val_loss = 0
 
         # 训练的进度条
-        with tqdm(total=len(train_loader),desc=f'Train {epoch + 1}/{num_epochs}',postfix=dict,mininterval=0.3) as pbar:
+        with tqdm(total=len(train_loader),mininterval=0.3) as pbar:
             for iteration, batch in enumerate(train_loader):
                 model = model.train()
                 images,labels = batch
@@ -118,17 +118,17 @@ def train(cfg):
                 optimizer.step()
 
                 total_loss += loss.item()
-
-
-                pbar.set_postfix(**{'total_loss': total_loss / (iteration + 1)})
-                pbar.update(1)
                 val_loss = total_loss / (iteration + 1)
+                desc_str = f"{'Train':8s} [{epoch + 1}/{num_epochs}] loss:{val_loss:.3f}"
+                pbar.desc = f"{desc_str:40s}"
+                # pbar.set_postfix(**{'total_loss': total_loss / (iteration + 1)})
+                pbar.update(1)
         logging.info(f"epoch={epoch} total_loss={val_loss:.6f}")
         # tb_writer.add_scalar("loss",val_loss,epoch)
         # print(f"[{time.time()-start_time:.2f}] epoch={epoch} total_loss={val_loss:.6f}")
         
         # 检验模型在测试集上的准确性
-        with tqdm(total=len(test_loader),desc=f'Test {epoch + 1}/{num_epochs}',postfix=dict,mininterval=0.3) as pbar:
+        with tqdm(total=len(test_loader),mininterval=0.3) as pbar:
             
             correct = 0
             total = 0
@@ -143,7 +143,9 @@ def train(cfg):
                 correct += (predicted == labels).sum().item()
 
                 accuracy = 100 * correct / total
-                pbar.set_postfix(**{'accuracy': accuracy})
+                desc_str = f"{'Test':8s} [{epoch + 1}/{num_epochs}] accuracy:{accuracy:.3f}"
+                pbar.desc = f"{desc_str:40s}"
+                # pbar.set_postfix(**{'accuracy': accuracy})
                 pbar.update(1)
 
             if accuracy >= 98:
